@@ -1,0 +1,38 @@
+from torch import cuda as CUDA
+from ultralytics import YOLO
+
+class Model(YOLO):
+    def __init__(self, YOLO_model, YOLO_task=None, YOLO_session=None):
+        super().__init__(model=YOLO_model, task=YOLO_task, session=YOLO_session)
+        try:
+            if not CUDA.is_available():
+                print(f"[YOLOv8] CUDA not avaible!")
+            else:
+                try:
+                    if not CUDA.is_initialized():
+                        CUDA.init()
+                    print(f"[YOLOv8] CUDA initialized")
+                    try:
+                        CUDA.empty_cache()
+                        print("[YOLOv8] CUDA cache cleared")
+                    except Exception as error:
+                        print(error)
+                except Exception as error:
+                    print(error)
+        except Exception as error:
+            print(error)
+
+    def process_image(self, frame, confidence=0.6, max_objects_detected=10, show_video=False):
+        # use the model to predict directly on the video frame
+        results = self.predict(
+            source       = frame      ,          # image to process (can be a video flow)
+            #classes      = [0]        ,          # classes to detect (see coco128.yaml)
+            show         = False      ,          # get video output
+            conf         = confidence ,          # accuracy threshold
+            retina_masks = True       ,
+            max_det      = max_objects_detected  # max number of object detected (large numbers impact on performance)
+        )
+
+        processed_frame = results[0].plot()
+
+        return processed_frame

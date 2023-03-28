@@ -1,0 +1,12 @@
+LICENSE.txt
+README.md
+setup.py
+video_streaming.egg-info/PKG-INFO
+video_streaming.egg-info/SOURCES.txt
+video_streaming.egg-info/dependency_links.txt
+video_streaming.egg-info/requires.txt
+video_streaming.egg-info/top_level.txt
+videostreaming/__init__.py
+videostreaming/fps.py
+videostreaming/socket.py
+videostreaming/utils.py

@@ -1,0 +1,16 @@
+Metadata-Version: 2.1
+Name: video-streaming
+Version: 0.1.1
+Summary: Small package to simplify video streaming using python built-in socket library
+Home-page: https://github.com/MikiTwenty/Python/tree/main/Libraries/socket-video-streaming
+Author: MikiTwenty
+Author-email: terminetor.xx@gmail.com
+License: MIT
+Keywords: python,socket,streaming,server,client
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+
+Small package to simplify video streaming using python built-in socket library
