@@ -16,10 +16,8 @@ while True:
 
     # check connection with the client
     while client.is_connected():
-        try:
-            client.send()
-        except:
-            break
+
+        client.send()
 
         client.receive(show_video=True)
 

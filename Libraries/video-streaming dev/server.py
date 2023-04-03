@@ -44,10 +44,4 @@ while True:
             fps = counter.get_fps(get_stats=True, print_output=True)
 
             # send the processed fps
-            try:
-                server.send(frame=processed_frame)
-            except:
-                break
-
-        else:
-            break
+            server.send(frame=processed_frame)
