@@ -1,7 +1,6 @@
 from modules.socket import Server
-from modules.fps import Counter
-from modules.utils import clear_output, get_cwd
-from modules._processing import Model
+from modules.utils import Clock, clear_output, get_cwd
+from modules.processing import Model
 
 # set current working directory
 get_cwd(__file__)
@@ -12,8 +11,8 @@ clear_output()
 # initialize the yolo model
 model = Model("models/yolov8x-seg.pt")
 
-# initialize the fps counter
-counter = Counter()
+# initialize the fps clock
+clock = Clock()
 
 # create a loop
 while True:
@@ -31,17 +30,14 @@ while True:
 
         if receiving:
 
-            # start the time counter
-            counter.start()
+            # set starting time to get fps
+            clock.tick()
 
             # process the frame
             processed_frame = model.process_image(frame, show_video=True)
 
-            # stop the time counter
-            counter.stop()
-
             # get the fps
-            fps = counter.get_fps(get_stats=True, print_output=True)
+            clock.get_fps(get_stats=False, print_output=True)
 
-            # send the processed fps
+            # send the processed frame
             server.send(frame=processed_frame)
