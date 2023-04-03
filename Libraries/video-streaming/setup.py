@@ -1,6 +1,6 @@
 from setuptools import setup
 
-VERSION = "0.2.0"
+VERSION = "0.2.1"
 
 with open("README.md", "r") as f:
     long_description = f.read()
@@ -22,5 +22,5 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Operating System :: OS Independent",
     ],
-    install_requires=["imutils"]
+    install_requires=["opencv-python"]
 )
