@@ -26,15 +26,15 @@ class Socket(object):
 
     def _set_port(self):
         while True:
-            port = input("{self.socket_type} Select port >> ")
+            port = input(f"{self.socket_type} Select port >> ")
             if len(port) == 4:
                 try:
                     port = int(port)
                     break
                 except:
-                    print("{self.socket_type} Port not valid!")
+                    print(f"{self.socket_type} Port not valid!")
             else:
-                print("{self.socket_type} Port not valid!")
+                print(f"{self.socket_type} Port not valid!")
         return port
 
     def _send_size(self):
@@ -50,13 +50,11 @@ class Socket(object):
 
     def _get_size(self):
         try:
-            print(1.1)
             self.client_socket.settimeout(1)
             self.max_download_speed = int(self.client_socket.recv(10*1000*1024), 2)
             self.client_socket.setblocking(True)
-            print(1.11)
+            print(f"{self.socket_type} Connection optimized!")
         except Exception as error:
-            print(1.2)
             print(error)
 
     def send(self, frame=None, resolution=(640, 480), show_video=False):
@@ -192,7 +190,6 @@ class Server(Socket):
             self.client_socket, address = self.server_socket.accept()
             print(f"{self.socket_type} Got connection from: {address[0]}")
             self._get_size()
-            #self._send_size()
         except:
             pass
 
@@ -236,7 +233,6 @@ class Client(Socket):
             self.client_socket.connect((host_ip, port))
             print(f"{self.socket_type} Connected at: {host_ip}")
             self._send_size()
-            #self._get_size()
             return True
         except:
             pass

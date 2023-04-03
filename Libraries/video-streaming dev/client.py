@@ -8,15 +8,14 @@ get_cwd(__file__)
 clear_output()
 
 while True:
-    print(0)
+
     # initialize the client socket
     client = Client()
 
-    client.connect("172.23.128.1", 1234)
+    client.connect("192.168.0.161", 1234)
 
     # check connection with the client
     while client.is_connected():
-        print(00)
         try:
             client.send()
         except:
