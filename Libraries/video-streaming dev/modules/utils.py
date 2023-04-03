@@ -10,7 +10,10 @@ def get_cwd(dir):
     - ``dir`` (str): directory to set,
     pass ``__file__`` to set the directory of the file you have call this method.
     """
-    os.chdir(os.path.dirname(os.path.abspath(dir)))
+    try:
+        os.chdir(os.path.dirname(os.path.abspath(dir)))
+    except Exception as error:
+        raise(error)
 
 def clear_output():
     """
@@ -37,7 +40,10 @@ def get_RGB(color):
         "white" : (255, 255, 255),
         "random" : (randint(0, 255), randint(0, 255), randint(0, 255))
     }
-    return RGBcolors[color]
+    try:
+        return RGBcolors[color]
+    except Exception as error:
+        raise error
 
 class Clock(object):
     def __init__(self):
