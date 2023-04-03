@@ -14,7 +14,7 @@ setup(
     packages=["videostreaming"],
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/MikiTwenty/Python/tree/main/Libraries/socket-video-streaming",
+    url="https://github.com/MikiTwenty/Python/tree/main/Libraries/video-streaming",
     keywords=["python", "socket", "streaming", "server", "client"],
     license="MIT",
     classifiers=[
