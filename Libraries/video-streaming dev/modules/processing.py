@@ -16,23 +16,20 @@ class Model(YOLO):
                         CUDA.empty_cache()
                         print("[YOLOv8] CUDA cache cleared")
                     except Exception as error:
-                        print(error)
+                        raise(error)
                 except Exception as error:
-                    print(error)
+                    raise(error)
         except Exception as error:
-            print(error)
+            raise(error)
 
-    def process_image(self, frame, confidence=0.6, max_objects_detected=10, show_video=False):
-        # use the model to predict directly on the video frame
+    def process_image(self, frame, confidence=0.6, max_objects_detected=10):
         results = self.predict(
-            source       = frame      ,          # image to process (can be a video flow)
-            #classes      = [0]        ,          # classes to detect (see coco128.yaml)
-            show         = False      ,          # get video output
-            conf         = confidence ,          # accuracy threshold
+            source       = frame      ,
+            #classes      = [0]        ,
+            show         = False      ,
+            conf         = confidence ,
             retina_masks = True       ,
-            max_det      = max_objects_detected  # max number of object detected (large numbers impact on performance)
+            max_det      = max_objects_detected
         )
-
         processed_frame = results[0].plot()
-
         return processed_frame
