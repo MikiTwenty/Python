@@ -49,4 +49,9 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+# Git files
 .gitignore
+.gitattributes
+
+# Setup files
+setup.py
