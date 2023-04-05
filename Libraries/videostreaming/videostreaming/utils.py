@@ -1,8 +1,9 @@
 import os
 from time import time
 from random import randint
+from sys import platform
 
-def get_cwd(dir):
+def get_cwd(dir) -> None:
     """
     Get current work directory.\n
     Parameters
@@ -11,17 +12,25 @@ def get_cwd(dir):
     pass ``__file__`` to set the directory of the file you have call this method.
     """
     try:
-        os.chdir(os.path.dirname(os.path.abspath(dir)))
+        current_directory = os.path.dirname(os.path.abspath(dir))
+        os.chdir(current_directory)
+        print(f"[System] Current directory: \"{current_directory}\"")
     except Exception as error:
         raise(error)
 
-def clear_output():
+def clear_output() -> None:
     """
     Clear terminal output.
     """
-    os.system("cls")
+    try:
+        if platform == "linux" or platform == "linux2":
+            os.system("clear")
+        elif platform == "darwin" or platform == "win32":
+            os.system("cls")
+    except Exception as error:
+        raise(error)
 
-def get_RGB(color):
+def get_RGB(color) -> tuple:
     """
     Return predefined colors in rgb format.\n
     Parameters
@@ -46,7 +55,7 @@ def get_RGB(color):
         raise error
 
 class Clock(object):
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Useful class to get fps with librarias that don't have fps Clock built-in.\n
         Methods
@@ -68,7 +77,7 @@ class Clock(object):
         self.min_fps = 10^5
         self.i = 0
 
-    def tick(self):
+    def tick(self) -> None:
         """
         Set start time for the Clock before an event starts.\n
         Example
@@ -81,7 +90,7 @@ class Clock(object):
         """
         self.start_time = time()
 
-    def get_fps(self, get_stats=False, print_output=True, format_text=True):
+    def get_fps(self, get_stats=False, print_output=True, format_text=True) -> str:
         """
         Calculate the fps of a loop cycle.\n
         Parameters
