@@ -1,5 +1,5 @@
 ### videostreaming
-### v0.2.4
+### v0.2.5
 ### MikiTwenty
 
 import socket, pickle, struct, cv2, sys, time
@@ -198,7 +198,7 @@ class Socket(object):
             raise(error)
 
 class Server(Socket):
-    def __init__(self, show_ip:bool=True, capture_video:bool=False, video_source:int=0, verbose:str|int|bool=True) -> None:
+    def __init__(self, show_ip:bool=True, capture_video:bool=False, video_source:int=0, verbose:bool=True) -> None:
         """
         Streaming server socket.\n
         Parameters
@@ -265,7 +265,7 @@ class Server(Socket):
                 self.connect(port, blocking=True)
 
 class Client(Socket):
-    def __init__(self, show_ip:bool=True, capture_video:bool=True, video_source:int=0, verbose:str|int|bool=True) -> None:
+    def __init__(self, show_ip:bool=True, capture_video:bool=True, video_source:int=0, verbose:bool=True) -> None:
         """
         Streaming client socket.\n
         Parameters
