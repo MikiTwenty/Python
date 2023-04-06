@@ -1,3 +1,7 @@
+### videostreaming
+### v0.2.4
+### MikiTwenty
+
 import socket, pickle, struct, cv2, sys, time
 
 class Socket(object):
@@ -149,7 +153,7 @@ class Socket(object):
         except Exception as error:
             raise(error)
 
-    def connected(self) -> socket.socket | False:
+    def connected(self) -> socket.socket:
         """
         Check if a client is connected with the server.\n
         Returns
