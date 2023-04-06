@@ -20,7 +20,7 @@ while server.connected():
     receiving, frame = server.receive()
 
     # check if a client is connected
-    if receiving():
+    if receiving:
 
         # recevie a frame
         receiving, frame = server.receive(show_video=True)
