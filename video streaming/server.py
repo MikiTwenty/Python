@@ -1,23 +1,35 @@
-from videostreaming.socket import Server
-from videostreaming.utils import clear_output
+from videostreaming.hosting import Server
+from videostreaming.utils import Clock, clear_output
 
 # clear terminal output
 clear_output()
 
+# initialize the fps clock
+clock = Clock()
+
+# initialize the server socket
+server = Server(verbose='high')
+
+# start the server
+server.connect(
+    port     = 1234,
+    blocking = True
+)
+
 # create a loop
-while True:
+while server.connected():
 
-    # initialize the server socket
-    server = Server(capture_video=True)
-
-    # open server to incoming connections
-    server.start(port=1234)
+    # recevie a frame from the client
+    receiving, frame = server.receive()
 
     # check if a client is connected
-    while server.is_connected():
+    if receiving():
 
         # recevie a frame
         receiving, frame = server.receive(show_video=True)
 
         # send a frame
         server.send()
+
+# close the server socket
+server.close()
