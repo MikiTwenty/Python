@@ -90,7 +90,7 @@ class Clock(object):
         """
         self.start_time = time()
 
-    def get_fps(self, get_stats=False, print_output=True, format_text=True) -> str:
+    def get_fps(self, get_stats=False, print_output=True, format_text=True) -> list | str:
         """
         Calculate the fps of a loop cycle.\n
         Parameters
@@ -144,9 +144,7 @@ class Clock(object):
             'max'  : self.max_fps  ,
             'min'  : self.min_fps
         }
-
         self.start_time = self.end_time
-
         if get_stats:
             return results
         else:

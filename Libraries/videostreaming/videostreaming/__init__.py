@@ -1,2 +1,2 @@
-from .socket import *
+from .hosting import *
 from .utils import  *

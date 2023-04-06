@@ -3,7 +3,7 @@ import socket, pickle, struct, cv2, sys, time
 class Socket(object):
     def __init__(self, socket_type, show_ip, capture_video, video_source, verbose) -> None:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.host_name  = socket.gethostname()
+        self.host_name = socket.gethostname()
         self.host_ip = socket.gethostbyname(self.host_name)
         self.socket_type = socket_type
         self.capture_video = capture_video
@@ -13,18 +13,19 @@ class Socket(object):
         self._set_verbosity(verbose)
         self.timed_out = False
         if show_ip:
-            self._log(f"IP address: {self.host_ip}")
+            self._log(f"IP address: {self.host_ip}", self.verbosity_level[0])
         if self.capture_video:
             self._get_video()
 
     def _get_video(self):
         try:
+            self._log("Initializing OpenCV video capture...", self.verbosity_level[2])
             self.video = cv2.VideoCapture(self.video_source)
             if self.video is None or not self.video.isOpened():
-                self._log(f"Warning: unable to open video source: {self.video_source}")
+                self._log(f"Unable to open video source: {self.video_source}")
                 exit()
         except Exception as error:
-            self._log(error)
+            raise(error)
 
     def _set_port(self):
         while True:
@@ -51,12 +52,12 @@ class Socket(object):
             if capturing:
                 frame_size = sys.getsizeof(frame) + 100
                 self.max_upload_speed = frame_size
-                self._log(f"Camera frame size: {(frame_size/(1000*1024)):.2f} MB")
+                self._log(f"Camera frame size: {(frame_size/(1000*1024)):.2f} MB", self.verbosity_level[2])
                 if send:
                     try:
                         frame_size_binary = (bin(frame_size)).encode()
                         self.client_socket.sendall(frame_size_binary)
-                        self._log(f"Frame size sent to: {self.client_socket.getsockname()[0]}")
+                        self._log(f"Frame size sent to: {self.client_socket.getsockname()[0]}", self.verbosity_level[2])
                     except Exception as error:
                         self._log(error)
         except Exception as error:
@@ -68,22 +69,23 @@ class Socket(object):
                 self.client_socket.settimeout(1)
                 self.max_download_speed = int(self.client_socket.recv(10*1000*1024), 2)
                 self.client_socket.setblocking(True)
-                self._log(f"Get frame size from: {self.client_socket.getsockname()[0]}")
+                self._log(f"Get frame size from: {self.client_socket.getsockname()[0]}", self.verbosity_level[2])
             except Exception as error:
                 self._log(error)
         else:
             try:
                 size *= 1000*1024
                 self.max_download_speed = size
+                self._log("Upload speed set as default (10 MB)", self.verbosity_level[2])
             except Exception as error:
                 raise(error)
 
-    def send(self, frame=None, resolution=(640, 480), show_video=False) -> None:
+    def send(self, frame:object=None, resolution:tuple=(640, 480), show_video:bool=False) -> None:
         """
         Send a frame to the connected socket.\n
         Parameters
         ----------
-        - ``frame`` (obj) : the frame to send.
+        - ``frame`` (object) : the frame to send.
         - ``resolution`` (tuple) : the frame resolution,
          must be a tuple (int, int), (default: (640, 480)).
         - ``show_video`` (bool) : show the outgoing video,
@@ -97,7 +99,7 @@ class Socket(object):
             try:
                 frame = cv2.resize(frame, dsize=resolution)
             except Exception as error:
-                self._log(error)
+                raise(error)
             serialized_frame = pickle.dumps(frame)
             message = struct.pack("Q", len(serialized_frame)) + serialized_frame
             try:
@@ -107,9 +109,9 @@ class Socket(object):
                         cv2.destroyAllWindows()
                 self.client_socket.sendall(message)
             except Exception as error:
-                self._log(error)
+                raise(error)
 
-    def receive(self, show_video=False) -> None:
+    def receive(self, show_video:bool=False) -> None:
         """
         Receive a frame from the connected socket.\n
         Parameters
@@ -118,7 +120,7 @@ class Socket(object):
          it works with capture_video=True (default=False).\n
         Returns
         -------
-        - ``True`` , ``frame`` (obj) : while receiving data.
+        - ``True`` | ``frame`` (object) : while receiving data.
         """
         data = b""
         payload_size = struct.calcsize("Q")
@@ -145,15 +147,15 @@ class Socket(object):
             else:
                 return True, frame
         except Exception as error:
-            self._log(error)
+            raise(error)
 
-    def connected(self) -> object:
+    def connected(self) -> socket.socket | False:
         """
         Check if a client is connected with the server.\n
         Returns
         -------
         - ``False`` (bool) : if no socket is connected.
-        - ``socket`` (obj) : if a socket is connected.
+        - ``socket`` (object) : if a socket is connected.
         """
         try:
             return self.client_socket
@@ -171,7 +173,7 @@ class Socket(object):
             pass
         self._log("Stopped")
 
-    def _set_verbosity(self, verbose=True):
+    def _set_verbosity(self, verbose):
         if verbose == 'high' or verbose == 3:
             self.verbosity_level = [True, True, True]
             self._log("Verbosity set to: 'high'", self.verbosity_level[0])
@@ -187,12 +189,12 @@ class Socket(object):
     def _log(self, string, verbose=True):
         try:
             if verbose:
-                print(f"{self.socket_type} "+string)
+                print(f"{self.socket_type} {string}")
         except Exception as error:
             raise(error)
 
 class Server(Socket):
-    def __init__(self, show_ip=True, capture_video=False, video_source=0, verbose=True):
+    def __init__(self, show_ip:bool=True, capture_video:bool=False, video_source:int=0, verbose:str|int|bool=True) -> None:
         """
         Streaming server socket.\n
         Parameters
@@ -200,7 +202,7 @@ class Server(Socket):
         - ``show_ip`` (bool) : self._log server IP address (default=True).
         - ``capture_video`` (bool) : enable video capturing with cameras (default=False).
         - ``video_source`` (int) : set camera index (default=0).
-        - ``verbose`` (int / bool / str) : set verbosity level,
+        - ``verbose`` (int | bool | str) : set verbosity level,
          it can be 'high' (or 3), 'medium' (or 2), 'low' (or True or 1),
          False (or 0) (default=True).\n
         Methods
@@ -222,7 +224,7 @@ class Server(Socket):
         super().__init__(socket_type="[Server]", show_ip=show_ip, capture_video=capture_video, video_source=video_source, verbose=verbose)
         self.server_socket = self.socket
 
-    def connect(self, port=None, timeout=1, blocking=False) -> None:
+    def connect(self, port:int=None, timeout:int=1, blocking:bool=False) -> None:
         """
         Wait for a client socket connection.\n
         Parameters
@@ -242,14 +244,14 @@ class Server(Socket):
             try:
                 self.server_socket.bind(socket_address)
             except Exception as error:
-                self._log(error)
+                raise(error)
         self.server_socket.listen(5)
         if not self.timed_out:
-            self._log(f"Listening at: {self.host_ip}:{str(port)}...")
+            self._log(f"Listening at: {self.host_ip}:{str(port)}...", self.verbosity_level[1])
         try:
             self.client_socket, address = self.server_socket.accept()
             if not self.timed_out:
-                self._log(f"Got connection from: {address[0]}")
+                self._log(f"Got connection from: {address[0]}", self.verbosity_level[0])
             self._set_size()
         except:
             self.timed_out = True
@@ -259,14 +261,15 @@ class Server(Socket):
                 self.connect(port, blocking=True)
 
 class Client(Socket):
-    def __init__(self, show_ip=True, capture_video=True, video_source=0, verbose=True):
+    def __init__(self, show_ip:bool=True, capture_video:bool=True, video_source:int=0, verbose:str|int|bool=True) -> None:
         """
         Streaming client socket.\n
         Parameters
         ----------
+        - ``show_ip`` (bool) : self._log server IP address (default=True).
         - ``capture_video`` (bool) : enable video capturing with cameras (default=False).
         - ``video_source`` (int) : set camera index (default=0).
-        - ``verbose`` (int / bool / str) : set verbosity level,
+        - ``verbose`` (int | bool | str) : set verbosity level,
          it can be 'high' (or 3), 'medium' (or 2), 'low' (or True or 1),
          False (or 0) (default=True).\n\n
         Methods
@@ -274,7 +277,7 @@ class Client(Socket):
         - ``connect()`` : connect to the server socket.
         - ``send()`` : send a frame to the server socket.
         - ``receive()`` : receive a frame from the server socket.
-        - ``connected()`` : check if the client is connected with the server (coming soon).
+        - ``connected()`` : check if the client is connected with the server (not working!).
         - ``disconnect()`` : disconnect from the server socket.\n
         Example
         -------
@@ -291,7 +294,7 @@ class Client(Socket):
     def _set_ip(self):
         return input(f"{self.socket_type} Select ip >> ")
 
-    def connect(self, host_ip=None, port=None, blocking=False) -> None:
+    def connect(self, host_ip:str=None, port:int=None, blocking:bool=False) -> None:
         """
         Connect to the server socket.\n
         Parameters
@@ -308,11 +311,11 @@ class Client(Socket):
             if not port:
                 port = self._set_port()
         if not self.timed_out:
-            self._log(f"Connecting to: {host_ip}:{port}...")
+            self._log(f"Connecting to: {host_ip}:{port}...", self.verbosity_level[1])
         try:
             self.client_socket.connect((host_ip, port))
             if not self.timed_out:
-                self._log(f"Connected to: {host_ip}")
+                self._log(f"Connected to: {host_ip}", self.verbosity_level[0])
             self._get_size(send=True)
             return True
         except:
