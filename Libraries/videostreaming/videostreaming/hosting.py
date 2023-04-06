@@ -1,5 +1,5 @@
 ### videostreaming
-### v0.2.5
+### v0.2.6
 ### MikiTwenty
 
 import socket, pickle, struct, cv2, sys, time

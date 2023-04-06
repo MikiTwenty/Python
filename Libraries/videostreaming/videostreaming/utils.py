@@ -1,5 +1,5 @@
 ### videostreaming
-### v0.2.5
+### v0.2.6
 ### MikiTwenty
 
 import os
@@ -94,7 +94,7 @@ class Clock(object):
         """
         self.start_time = time()
 
-    def get_fps(self, get_stats=False, print_output=True, format_text=True) -> list | str:
+    def get_fps(self, get_stats=False, print_output=True, format_text=True) -> str:
         """
         Calculate the fps of a loop cycle.\n
         Parameters
