@@ -8,10 +8,7 @@ clear_output()
 client = Client(verbose='high')
 
 # connect to the server
-client.connect(
-    host_ip = "192.168.0.161",
-    port    = 1234
-)
+client.connect()
 
 # check connection with the client
 while client.connected():

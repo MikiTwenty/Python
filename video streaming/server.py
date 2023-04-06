@@ -11,10 +11,7 @@ clock = Clock()
 server = Server(verbose='high')
 
 # start the server
-server.connect(
-    port     = 1234,
-    blocking = True
-)
+server.connect(blocking = True)
 
 # create a loop
 while server.connected():
