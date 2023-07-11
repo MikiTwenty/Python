@@ -1,26 +1,3 @@
-'''
-# Rules Functional Chess Game [BETA] v0.1.0
-
-_Based on ziii chess script for graphics._
-
-## Commands:
-- 'Arrows' to move the cursor
-- 'OK' to select a piece or move
-- 'Backspace' to unselect
-- 'Plus' to hide available moves
-
-## Known issues:
-- do not work on the online emulator
-
-## Upcoming updates:
-- checkmate rules
-- stalemate rules
-- points counter
-- string code to save game
-- current player board switcher
-- color themes
-'''
-
 from ion import *
 from time import sleep
 from kandinsky import fill_rect, draw_string
